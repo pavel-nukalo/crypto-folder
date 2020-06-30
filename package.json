@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
+    "create-user": "node scripts/create_user.js",
     "start": "node server/main.js",
     "dev": "nodemon --ignore './client/' server/main.js"
   },

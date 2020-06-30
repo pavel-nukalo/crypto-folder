@@ -1,32 +1,24 @@
-var MongoClient = require('mongodb').MongoClient;
-var config = require('./config');
+const MongoClient = require('mongodb').MongoClient;
+const config = require('./config');
 
-var state = {
+const state = {
   db: null,
   client: null
 };
 
-exports.get = function () {
-  return state.db;
-};
+exports.get = () => state.db;
 
-exports.getClient = function () {
-  return state.client;
-};
+exports.getClient = () => state.client;
 
-exports.connect = function (done) {
-  if (state.db) {
-    return Promise.resolve();
-  }
+exports.connect = async () => {
+  if (state.db) return;
 
-  var options = {
+  const options = {
     useUnifiedTopology: true,
     useNewUrlParser: true
   };
 
-  return MongoClient.connect(config.mongodb.url, options)
-    .then(function (client) {
-      state.client = client;
-      state.db = client.db();
-    });
+  const client = await MongoClient.connect(config.mongodb.url, options);
+  state.client = client;
+  state.db = client.db();
 };

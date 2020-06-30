@@ -1,29 +1,23 @@
-var db = require('../db');
-var ObjectID = require('mongodb').ObjectID;
+const db = require('../db');
+const ObjectID = require('mongodb').ObjectID;
 
-var collection = 'documents';
+const collection = 'documents';
 
-exports.getAll = function () {
-  return db.get().collection(collection).find().toArray();
-};
+exports.getAll = () => db.get().collection(collection).find().toArray();
 
-exports.get = function (id) {
-  if (!ObjectID.isValid(id)) return Promise.reject();
-  
+exports.get = id => {
+  if (!ObjectID.isValid(id)) {
+    return Promise.reject(new Error('ObjectID is not valid'));
+  }
+
   return db.get().collection(collection).findOne({ _id: ObjectID(id) });
 };
 
-exports.update = function (id, doc) {
-  return db.get().collection(collection).findOneAndUpdate({ _id: ObjectID(id) }, { $set: doc });
+exports.update = (id, doc) => db.get().collection(collection).findOneAndUpdate({ _id: ObjectID(id) }, { $set: doc });
+
+exports.create = async doc => {
+  const result = await db.get().collection(collection).insertOne(doc);
+  return result.ops[0];
 };
 
-exports.create = function (doc) {
-  return db.get().collection(collection).insertOne(doc)
-    .then(function (result) {
-      return result.ops[0];
-    });
-};
-
-exports.delete = function (id) {
-  return db.get().collection(collection).deleteOne({ _id: ObjectID(id) });
-};
+exports.delete = id => db.get().collection(collection).deleteOne({ _id: ObjectID(id) });

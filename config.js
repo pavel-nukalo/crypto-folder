@@ -38,7 +38,6 @@ module.exports = {
 
   mailOptions: {
     from: 'CryptoFolder',
-    to: '',
     subject: 'Код аутентификации'
   },
 

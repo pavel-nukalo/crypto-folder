@@ -1,25 +1,20 @@
-var passport = require('passport');
-
-var userModel = require('../models/user');
-
+const passport = require('passport');
+const userModel = require('../models/user');
 require('./local');
 
-passport.serializeUser(function (user, done) {
-  done(null, user._id);
+passport.serializeUser((user, done) => done(null, user._id));
+
+passport.deserializeUser(async (user_id, done) => {
+  try {
+    const user = await userModel.get(user_id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
 });
 
-passport.deserializeUser(function (user_id, done) {
-  userModel.get(user_id)
-    .then(function (user) {
-      done(null, user);
-    })
-    .catch(function (err) {
-      done(err);
-    });
-});
-
-passport.authenticationMiddleware = function () {
-  return function (req, res, next) {
+passport.authenticationMiddleware = () => {
+  return (req, res, next) => {
     if (!req.isAuthenticated()) {
       return res.sendStatus(401);
     }

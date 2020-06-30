@@ -1,64 +1,57 @@
-var documentModel = require('../models/document');
+const documentModel = require('../models/document');
 
-exports.getAll = function (req, res) {
-  documentModel.getAll()
-    .then(function (docs) {
-      res.json(docs);
-    })
-    .catch(function () {
-      res.sendStatus(500);
-    });
+exports.getAll = async (req, res) => {
+  try {
+    const docs = await documentModel.getAll();
+    res.json(docs);
+  } catch (e) {
+    res.sendStatus(500);
+  }
 };
 
-exports.get = function (req, res) {
-  documentModel.get(req.params.id)
-    .then(function (doc) {
-      res.json(doc);
-    })
-    .catch(function() {
-      res.sendStatus(500);
-    });
+exports.get = async (req, res) => {
+  try {
+    const doc = await documentModel.get(req.params.id);
+    res.json(doc);
+  } catch (e) {
+    res.sendStatus(500);
+  }
 };
 
-exports.update = function (req, res) {
-  var doc = {
-    lastModified: new Date().toISOString()
-  };
-  
-  if (req.body.name) doc.name = req.body.name;
-  if (req.body.data) doc.data = req.body.data;
-  
-  documentModel.update(req.params.id, doc)
-    .then(function () {
-      res.sendStatus(200);
-    })
-    .catch(function () {
-      res.sendStatus(500);
-    });
+exports.update = async (req, res) => {
+  try {
+    const doc = {
+      lastModified: new Date().toISOString()
+    };
+
+    if (req.body.name) doc.name = req.body.name;
+    if (req.body.data) doc.data = req.body.data;
+
+    await documentModel.update(req.params.id, doc);
+    res.sendStatus(200);
+  } catch (e) {
+    res.sendStatus(500);
+  }
 };
 
-exports.create = function (req, res) {
-  var doc = {
-    name: req.body.name,
-    data: req.body.data,
-    lastModified: new Date().toISOString()
-  };
-
-  documentModel.create(doc)
-    .then(function (doc) {
-      res.json(doc);
-    })
-    .catch(function () {
-      res.sendStatus(500);
+exports.create = async (req, res) => {
+  try {
+    const doc = await documentModel.create({
+      name: req.body.name,
+      data: req.body.data,
+      lastModified: new Date().toISOString()
     });
+    res.status(201).json(doc);
+  } catch (e) {
+    res.sendStatus(500);
+  }
 };
 
-exports.delete = function (req, res) {
-  documentModel.delete(req.params.id)
-    .then(function () {
-      res.sendStatus(200);
-    })
-    .catch(function () {
-      res.sendStatus(500);
-    });
+exports.delete = async (req, res) => {
+  try {
+    await documentModel.delete(req.params.id);
+    res.sendStatus(200);
+  } catch (e) {
+    res.sendStatus(500);
+  }
 };

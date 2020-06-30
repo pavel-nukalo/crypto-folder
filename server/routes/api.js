@@ -1,14 +1,10 @@
-var express = require('express');
-var router = express.Router();
-
-var passport = require('passport');
-
-var documentsController = require('../controllers/documents');
-
-var authenticationRouter = require('./authentication');
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
+const documentsController = require('../controllers/documents');
+const authenticationRouter = require('./authentication');
 
 router.use('/authentication', authenticationRouter);
-
 
 router.get('/documents/', passport.authenticationMiddleware(), documentsController.getAll);
 
