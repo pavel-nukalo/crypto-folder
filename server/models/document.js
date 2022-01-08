@@ -3,7 +3,7 @@ const ObjectID = require('mongodb').ObjectID;
 
 const collection = 'documents';
 
-exports.getAll = () => db.get().collection(collection).find().toArray();
+exports.getAll = () => db.get().collection(collection).find().project({ data: 0 }).toArray();
 
 exports.get = id => {
   if (!ObjectID.isValid(id)) {

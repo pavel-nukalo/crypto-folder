@@ -53,7 +53,7 @@ const start = async () => {
         console.log(`App listen https://${config.https.hostname}:${config.https.port}`);
       });
     }
-  } catch (e) {
+  } catch (err) {
     console.error(err);
   }
 };
